@@ -203,6 +203,7 @@ int decompress_input(ZstdDecompressionReader* self, ZSTD_outBuffer* output) {
 	/* We're at the end of a frame and we aren't allowed to return data
 	   spanning frames. */
 	else if (output->pos && zresult == 0 && !self->readAcrossFrames) {
+		self->finishedOutput = 1;
 		return 1;
 	}
 

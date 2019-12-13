@@ -1882,6 +1882,9 @@ class ZstdDecompressionReader(object):
             raise ZstdError('zstd decompress error: %s' %
                             _zstd_error(zresult))
 
+        if zresult == 0 and not self._read_across_frames:
+            self._finished_output = True
+
         # Emit data if there is data AND either:
         # a) output buffer is full (read amount is satisfied)
         # b) we're at end of a frame and not in frame spanning mode
