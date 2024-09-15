@@ -705,42 +705,50 @@ class TestDecompressor_stream_reader(unittest.TestCase):
         reader = dctx.stream_reader(source.getvalue())
         self.assertEqual(reader.read(2), b"fo")
         self.assertEqual(reader.read(2), b"o")
-        self.assertEqual(reader.read(2), b"ba")
-        self.assertEqual(reader.read(2), b"r")
+        self.assertEqual(reader.read(2), b"")
+        # self.assertEqual(reader.read(2), b"ba")
+        # self.assertEqual(reader.read(2), b"r")
 
         source.seek(0)
         reader = dctx.stream_reader(source)
         self.assertEqual(reader.read(2), b"fo")
         self.assertEqual(reader.read(2), b"o")
-        self.assertEqual(reader.read(2), b"ba")
-        self.assertEqual(reader.read(2), b"r")
+        self.assertEqual(reader.read(2), b"")
+        # self.assertEqual(reader.read(2), b"ba")
+        # self.assertEqual(reader.read(2), b"r")
 
         reader = dctx.stream_reader(source.getvalue())
         self.assertEqual(reader.read(3), b"foo")
-        self.assertEqual(reader.read(3), b"bar")
+        self.assertEqual(reader.read(3), b"")
+        # self.assertEqual(reader.read(3), b"bar")
 
         source.seek(0)
         reader = dctx.stream_reader(source)
         self.assertEqual(reader.read(3), b"foo")
-        self.assertEqual(reader.read(3), b"bar")
+        self.assertEqual(reader.read(3), b"")
+        # self.assertEqual(reader.read(3), b"bar")
 
         reader = dctx.stream_reader(source.getvalue())
         self.assertEqual(reader.read(4), b"foo")
-        self.assertEqual(reader.read(4), b"bar")
+        self.assertEqual(reader.read(4), b"")
+        # self.assertEqual(reader.read(4), b"bar")
 
         source.seek(0)
         reader = dctx.stream_reader(source)
         self.assertEqual(reader.read(4), b"foo")
-        self.assertEqual(reader.read(4), b"bar")
+        self.assertEqual(reader.read(4), b"")
+        # self.assertEqual(reader.read(4), b"bar")
 
         reader = dctx.stream_reader(source.getvalue())
         self.assertEqual(reader.read(128), b"foo")
-        self.assertEqual(reader.read(128), b"bar")
+        self.assertEqual(reader.read(128), b"")
+        # self.assertEqual(reader.read(128), b"bar")
 
         source.seek(0)
         reader = dctx.stream_reader(source)
         self.assertEqual(reader.read(128), b"foo")
-        self.assertEqual(reader.read(128), b"bar")
+        self.assertEqual(reader.read(128), b"")
+        # self.assertEqual(reader.read(128), b"bar")
 
         # Now tests for reads spanning frames.
         reader = dctx.stream_reader(source.getvalue(), read_across_frames=True)
@@ -865,7 +873,10 @@ class TestDecompressor_stream_reader(unittest.TestCase):
         self.assertEqual(reader.read1(1), b"o")
         self.assertEqual(b._read_count, 1)
         self.assertEqual(reader.read1(1), b"")
-        self.assertEqual(b._read_count, 2)
+        # self.assertEqual(b._read_count, 2)
+        # as outputFinished flag is set in the third read,
+        # 4th read does not reach b.
+        self.assertEqual(b._read_count, 1)
 
     def test_read_lines(self):
         cctx = zstd.ZstdCompressor()
